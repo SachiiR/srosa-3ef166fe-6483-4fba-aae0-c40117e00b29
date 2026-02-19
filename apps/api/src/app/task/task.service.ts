@@ -56,7 +56,7 @@ export class TaskService {
     else if (user.role === Role.OWNER) {
       query = query.where('owner.organizationId = :orgId', { orgId: user.orgId });
 }
-    // Owner and Admin see all tasks
+    // Admin see all tasks
 
     return query.getMany();
   }

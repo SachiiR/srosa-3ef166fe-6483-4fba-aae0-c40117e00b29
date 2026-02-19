@@ -19,7 +19,7 @@ import { AuditModule } from './audit/audit.module';
       type: 'sqlite',
       database: process.env.DATABASE_NAME,
       entities: [User, Organization, Permission, Task, AuditLog],
-      synchronize: true, // Dev only; use migrations in prod
+      synchronize: true, 
     }),
     JwtModule.register({
       secret: process.env.JWT_SECRET,

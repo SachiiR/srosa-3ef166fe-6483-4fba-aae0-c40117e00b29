@@ -5,16 +5,16 @@ export enum Role {
   }
 
   export enum RoleHierarchy {
-    OWNER = 3,
-    ADMIN = 2,
+    ADMIN = 3,
+    OWNER = 2,
     VIEWER = 1,
   }
   export enum Category { 
     Work = 'Work', 
     Personal = 'Personal', 
+    All = 'All'
 } 
 export enum TaskStatus { 
     Pending = 'Pending', 
-    InProgress = 'In Progress', 
     Completed = 'Completed', 
 }

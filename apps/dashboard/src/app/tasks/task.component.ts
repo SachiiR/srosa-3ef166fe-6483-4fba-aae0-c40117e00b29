@@ -1,23 +1,38 @@
 import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  CdkDropList,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { loadUsers, setCurrentUser } from '../store/actions/user.action';
 import { Task, User } from '@org/data';
 import { TaskListComponent } from './task-list/task-list.component';
 import { TaskFormComponent } from './task-form/task-form.component';
-import { FilterPipe } from "../shared/pipes/filter.pipe";
-import { CategoryPipe } from "../shared/pipes/category.pipe";
+import { FilterPipe } from '../shared/pipes/filter.pipe';
+import { CategoryPipe } from '../shared/pipes/category.pipe';
 import { TaskService } from './task.service';
-import { AuthService } from './../auth/auth.service'
-import { selectAllUsers, selectCurrentUser } from '../store/selectors/user.selector';
+import { AuthService } from './../auth/auth.service';
+import {
+  selectAllUsers,
+  selectCurrentUser,
+} from '../store/selectors/user.selector';
 
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [CommonModule, FormsModule, CdkDropList, TaskListComponent, TaskFormComponent, FilterPipe, CategoryPipe],
+  imports: [
+    CommonModule,
+    FormsModule,
+    CdkDropList,
+    TaskListComponent,
+    TaskFormComponent,
+    FilterPipe,
+    CategoryPipe,
+  ],
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.css'],
 })
@@ -40,7 +55,12 @@ export class TasksComponent implements OnInit {
   auditLogs: any[] = [];
   showAuditLog = false;
 
-  constructor(private store: Store, private taskService: TaskService, private authService: AuthService, private cd: ChangeDetectorRef) {
+  constructor(
+    private store: Store,
+    private taskService: TaskService,
+    private authService: AuthService,
+    private cd: ChangeDetectorRef
+  ) {
     this.currentUser$ = this.store.select(selectCurrentUser);
     this.users$ = this.store.select(selectAllUsers);
   }
@@ -52,18 +72,17 @@ export class TasksComponent implements OnInit {
       this.store.dispatch(setCurrentUser({ user: payload }));
     }
 
-
-    this.users$.subscribe(users => {
+    this.users$.subscribe((users) => {
       this.users = users;
-      
+
       this.cd.detectChanges();
     });
 
-    this.currentUser$.subscribe(user => {
+    this.currentUser$.subscribe((user) => {
       if (user) {
         this.loggedInUserId = user.sub;
-        console.log(user)
-        this.currentUser = user
+        console.log(user);
+        this.currentUser = user;
       }
     });
     this.store.dispatch(loadUsers());
@@ -73,12 +92,14 @@ export class TasksComponent implements OnInit {
   }
 
   get canViewAuditLog(): boolean {
-    return this.currentUser?.role === 'Owner' || this.currentUser?.role === 'Admin';
+    return (
+      this.currentUser?.role === 'Owner' || this.currentUser?.role === 'Admin'
+    );
   }
-  
+
   toggleAuditLog() {
     if (!this.showAuditLog) {
-      this.taskService.getAuditLogs().subscribe(logs => {
+      this.taskService.getAuditLogs().subscribe((logs) => {
         this.auditLogs = logs;
         this.cd.detectChanges();
       });
@@ -96,9 +117,8 @@ export class TasksComponent implements OnInit {
   }
   showToast(message: string, type: 'success' | 'error' = 'success') {
     this.toast = { message, type };
-    setTimeout(() => this.toast = null, 3000);
+    setTimeout(() => (this.toast = null), 3000);
   }
-
 
   getTasks(): Task[] {
     this.taskService.getTasks().subscribe({
@@ -107,23 +127,12 @@ export class TasksComponent implements OnInit {
         this.isLoading = false;
         this.cd.detectChanges();
       },
-      error: (err) => {
+      error: () => {
         this.isLoading = false;
-      }
+      },
     });
     return this.taskList;
   }
-
-  // onDrop(event: CdkDragDrop<Task[]>) {
-  //   moveItemInArray(this.taskList, event.previousIndex, event.currentIndex);
-  //   this.taskList = this.taskList.map((t, index) => ({ ...t, order: index + 1 }));
-
-  //   this.taskService.reorderTasks(
-  //     this.taskList.map(t => ({ id: t.id, order: t.order }))
-  //   ).subscribe();
-
-  //   this.cd.detectChanges();
-  // }
 
   get taskList(): Task[] {
     return this._taskList;
@@ -142,11 +151,14 @@ export class TasksComponent implements OnInit {
     if (event.previousIndex === event.currentIndex) return;
 
     moveItemInArray(this._taskList, event.previousIndex, event.currentIndex);
-    this.taskList = this._taskList.map((t, index) => ({ ...t, order: index + 1 }));
+    this.taskList = this._taskList.map((t, index) => ({
+      ...t,
+      order: index + 1,
+    }));
 
-    this.taskService.reorderTasks(
-      this._taskList.map(t => ({ id: t.id, order: t.order }))
-    ).subscribe();
+    this.taskService
+      .reorderTasks(this._taskList.map((t) => ({ id: t.id, order: t.order })))
+      .subscribe();
 
     this.cd.detectChanges();
   }
@@ -156,7 +168,6 @@ export class TasksComponent implements OnInit {
   }
 
   addNewTask(task: Task) {
-    console.log('-3')
     this.taskService.createTask(task).subscribe({
       next: () => {
         this.taskList = this.getTasks();
@@ -165,7 +176,7 @@ export class TasksComponent implements OnInit {
         this.taskFormComponent.resetForm();
         this.showToast('Task created successfully!');
       },
-      error: (err) => this.showToast('Failed to create task.', 'error')
+      error: (err) => this.showToast('Failed to create task.', 'error'),
     });
   }
 
@@ -184,7 +195,7 @@ export class TasksComponent implements OnInit {
         this.taskFormComponent.resetForm();
         this.showToast('Task updated successfully!');
       },
-      error: (err) => this.showToast('Failed to update task.', 'error')
+      error: (err) => this.showToast('Failed to update task.', 'error'),
     });
   }
 
@@ -194,18 +205,18 @@ export class TasksComponent implements OnInit {
         this.getTasks();
         this.showToast('Task deleted successfully!');
       },
-      error: () => this.showToast('Failed to delete task.', 'error')
+      error: () => this.showToast('Failed to delete task.', 'error'),
     });
   }
 
   get completedCount(): number {
-    return this._taskList.filter(t => t.status === 'Completed').length;
+    return this._taskList.filter((t) => t.status === 'Completed').length;
   }
-  
+
   get totalCount(): number {
     return this._taskList.length;
   }
-  
+
   get completionPercentage(): number {
     if (!this.totalCount) return 0;
     return Math.round((this.completedCount / this.totalCount) * 100);

@@ -16,11 +16,13 @@
         {{ task.status }}
       </span>
       <button
+      data-testid="edit-btn"
         (click)="onEdit()"
         class="px-2 py-0.5 text-xs font-medium bg-indigo-50 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-800 transition">
         ✏️
       </button>
       <button
+      data-testid="delete-btn"
     *ngIf="!isViewer"
         (click)="onDelete()"
         class="px-2 py-0.5 text-xs font-medium bg-red-50 dark:bg-red-900 text-red-600 dark:text-red-300 rounded-lg hover:bg-red-100 dark:hover:bg-red-800 transition">

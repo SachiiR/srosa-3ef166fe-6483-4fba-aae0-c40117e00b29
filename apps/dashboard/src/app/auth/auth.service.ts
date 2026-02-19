@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api/auth'; // Adjust to your backend
+  private apiUrl = 'http://localhost:3000/api/auth'; 
   private tokenSubject = new BehaviorSubject<string | null>(localStorage.getItem('jwt'));
 
   login(credentials: { email: string; password: string }): Observable<any> {
