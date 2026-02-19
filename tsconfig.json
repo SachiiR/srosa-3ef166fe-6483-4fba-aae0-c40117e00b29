@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.base.json",
-  "compileOnSave": false,
+  "compileOnSave": true,
   "files": [],
   "references": [
     {
@@ -14,6 +14,9 @@
     },
     {
       "path": "./libs/auth"
+    },
+    {
+      "path": "./apps/dashboard"
     }
   ]
 }

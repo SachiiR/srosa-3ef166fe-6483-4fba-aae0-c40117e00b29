@@ -20,6 +20,16 @@ module.exports = {
       outputHashing: 'none',
       generatePackageJson: false,
       sourceMap: true,
+      externalDependencies: [    
+       '@nestjs/websockets',
+        '@nestjs/websockets/socket-module',
+        '@nestjs/microservices',
+        '@nestjs/microservices/microservices-module',
+        '@nestjs/platform-express',
+        'class-validator',
+        'class-transformer',
+        'sqlite3',
+      ],
     }),
   ],
 };

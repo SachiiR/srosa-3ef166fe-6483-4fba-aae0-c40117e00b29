@@ -1,10 +1,12 @@
 {
   "extends": "../../tsconfig.base.json",
+  "composite": false,
   "compilerOptions": {
     "noPropertyAccessFromIndexSignature": true,
     "experimentalDecorators": true,
     "moduleResolution": "bundler",
-    "module": "preserve"
+    "module": "preserve",
+    "importHelpers": false
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

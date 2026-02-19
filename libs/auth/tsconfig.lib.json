@@ -1,13 +1,21 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    // "composite": true,
+    "declaration": true,
+    "declarationMap": true,
     "baseUrl": ".",
     "rootDir": "src",
     "outDir": "dist",
+    "moduleResolution": "node",
+    "module": "commonjs",
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node"]
+    "types": ["node"],
+    // "paths": { 
+    //   "@org/data": ["../../data/src/index.ts"] 
+    // }
   },
   "include": ["src/**/*.ts"],
   "references": []

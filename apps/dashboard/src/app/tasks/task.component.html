@@ -1,0 +1,139 @@
+<div [class.dark]="isDarkMode" class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+  
+  <!-- Header -->
+  <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between shadow-sm">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Task List</h1>
+      <!-- <p class="text-sm text-gray-500 dark:text-gray-400">
+        Welcome, <span class="font-medium text-indigo-600 dark:text-indigo-400">{{ currentUser?.username }}</span>
+      </p> -->
+    </div>
+    <div class="flex items-center gap-3">
+      <button
+      *ngIf="canViewAuditLog"
+        (click)="toggleForm()"
+        class="px-4 py-2 text-sm font-medium rounded-lg border border-indigo-500 text-indigo-600 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-900 transition">
+        {{ showForm ? '✖ Close' : '➕ Add Task' }}
+      </button>
+      <button
+  *ngIf="canViewAuditLog"
+  (click)="toggleAuditLog()"
+  class="px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+  {{ showAuditLog ? '✖ Close Logs' : '📋 Audit Log' }}
+</button>
+      <button
+        (click)="toggleTheme()"
+        class="px-3 py-2 text-sm font-medium rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition">
+        {{ isDarkMode ? '☀️ Light' : '🌙 Dark' }}
+      </button>
+      <button
+        (click)="logout()"
+        class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2">
+        🚪 Logout
+      </button>
+    </div>
+  </div>
+
+  <div class="max-w-4xl mx-auto px-4 py-6 space-y-6">
+
+    <!-- Task Form -->
+    <div *ngIf="showForm" class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+      <app-task-form
+        [taskToEdit]="selectedTask"
+        (cancelled)="onCancelEdit()"
+        (taskSubmitted)="addNewTask($event)"
+        (taskUpdated)="onEditTask($event)">
+      </app-task-form>
+    </div>
+<!-- Audit Log -->
+<div *ngIf="showAuditLog" class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+  <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">📋 Audit Log</h2>
+  
+  <div *ngIf="!auditLogs.length" class="text-center py-10 text-gray-400 dark:text-gray-500 italic">
+    No audit logs found.
+  </div>
+
+  <div class="space-y-2 max-h-[500px] overflow-y-auto">
+    <div
+      *ngFor="let log of auditLogs"
+      class="flex items-center justify-between px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 text-sm">
+      <div class="flex items-center gap-3">
+        <span class="text-gray-400 dark:text-gray-500 text-xs">User #{{ log.userId }}</span>
+        <span class="text-gray-700 dark:text-gray-200">{{ log.action }}</span>
+      </div>
+      <span class="text-gray-400 dark:text-gray-500 text-xs shrink-0">
+        {{ log.timestamp | date:'MMM d, y, h:mm a' }}
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- Progress Bar -->
+<div *ngIf="!showForm && !showAuditLog && totalCount > 0" class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-4">
+  <div class="flex items-center justify-between mb-2">
+    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Task Completion</span>
+    <span class="text-sm font-semibold text-indigo-600 dark:text-indigo-400">
+      {{ completedCount }}/{{ totalCount }} ({{ completionPercentage }}%)
+    </span>
+  </div>
+  <div class="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-3">
+    <div
+      class="h-3 rounded-full transition-all duration-500"
+      [style.width.%]="completionPercentage"
+      [ngClass]="{
+        'bg-red-400': completionPercentage < 30,
+        'bg-amber-400': completionPercentage >= 30 && completionPercentage < 70,
+        'bg-green-500': completionPercentage >= 70
+      }">
+    </div>
+  </div>
+</div>
+
+    <!-- Filters -->
+    <div *ngIf="!showForm" class="mb-2 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 flex flex-col md:flex-row gap-3">
+      <div class="flex-1 relative">
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔍</span>
+        <input
+          [(ngModel)]="filter"
+          placeholder="Search tasks..."
+          class="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500">
+      </div>
+      <select
+        [(ngModel)]="category"
+        class="px-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100">
+        <option value="All">📋 All Categories</option>
+        <option value="Work">💼 Work</option>
+        <option value="Personal">🏠 Personal</option>
+      </select>
+    </div>
+
+    <!-- Task List -->
+    <cdk-drop-list *ngIf="!showForm" (cdkDropListDropped)="onDrop($event)" class="space-y-3">
+      <div *ngIf="isLoading" class="flex items-center justify-center py-16 text-gray-400 dark:text-gray-500">
+        <div class="text-center">
+          <div class="text-4xl mb-2">⏳</div>
+          <p class="text-sm">Loading tasks...</p>
+        </div>
+      </div>
+      <app-task-list
+        *ngIf="!isLoading"
+        [tasks]="taskList | filter:filter | category:category"
+        (editTask)="onSelectTaskForEdit($event)"
+        (deleteTask)="deleteTask($event)">
+      </app-task-list>
+    </cdk-drop-list>
+    <div class="fixed bottom-0 right-0 px-4 py-2 text-xs text-gray-400 dark:text-gray-500">
+      Logged in as <span class="font-medium text-indigo-500 dark:text-indigo-400">{{ currentUser?.email }}</span>
+    </div>
+  </div>
+  <!-- Toast -->
+<div
+*ngIf="toast"
+class="fixed bottom-10 left-1/2 -translate-x-1/2 px-5 py-3 rounded-xl shadow-lg text-sm font-medium text-white transition-all duration-300 z-50"
+[ngClass]="{
+  'bg-green-500': toast.type === 'success',
+  'bg-red-500': toast.type === 'error'
+}">
+{{ toast.message }}
+</div>
+</div>

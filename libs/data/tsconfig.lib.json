@@ -1,11 +1,20 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    // "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "module": "nodenext",   
     "baseUrl": ".",
     "rootDir": "src",
     "outDir": "dist",
+    "moduleResolution": "node",
+    "module": "commonjs",
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
-    "emitDeclarationOnly": true,
+    // "outDir": "../../dist/out-tsc/libs/data",
+    // "tsBuildInfoFile": "../../dist/out-tsc/libs/data/tsconfig.lib.tsbuildinfo",
+   // "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
     "types": ["node"]
   },

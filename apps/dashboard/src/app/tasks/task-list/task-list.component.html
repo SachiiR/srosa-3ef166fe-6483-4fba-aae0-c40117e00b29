@@ -1,0 +1,15 @@
+<div class="space-y-3">
+  <div *ngIf="!tasks?.length" class="text-center py-10 text-gray-500 dark:text-gray-400 italic">
+    No matching tasks — try adjusting filters or create a new one.
+  </div>
+
+  <ng-container *ngFor="let task of tasks; trackBy: trackByTaskId">
+    <div cdkDrag [cdkDragData]="task" class="transform transition-all duration-200">
+      <app-task-card 
+        [task]="task"
+        (edit)="editTask.emit(task)"
+        (delete)="deleteTask.emit(task.id)">
+      </app-task-card>
+    </div>
+  </ng-container>
+</div>
