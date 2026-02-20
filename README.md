@@ -119,12 +119,17 @@ libs/
 | Organization | id, name | Groups users together for scoped access |
 | AuditLog | id, action, userId, timestamp | Immutable log of all task operations |
 
-### Relationships
+### Schema Description
 
-```
-![ERD](https://raw.githubusercontent.com/SachiiR/srosa-3ef166fe-6483-4fba-aae0-c40117e00b29/main/erd.png)
+The database consists of five main entities:
 
-```
+- **User** – belongs to an organization, can own and be assigned to tasks, and has a role-based access.
+- **Organization** – hierarchical structure with a self-referencing `parentId`.
+- **Task** – has a title, description, category, status, and order. Linked to an owner and an assignee (both users).
+- **Audit Log** – tracks user actions with a timestamp.
+- **Permission** – defines permissions by name and role.
+
+
 Roles are implemented as a TypeScript enum shared across the frontend 
 and backend via the `@org/data` shared library, rather than a dedicated 
 database table.
