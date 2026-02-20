@@ -122,7 +122,7 @@ libs/
 ### Relationships
 
 ```
-![Alt text](erd.png)
+<img src="erd.png" alt="Entity Relationship Diagram" width="800" />
 
 ```
 Roles are implemented as a TypeScript enum shared across the frontend 
