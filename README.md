@@ -122,7 +122,7 @@ libs/
 ### Relationships
 
 ```
-![ERD](erd.png)
+![ERD](https://raw.githubusercontent.com/SachiiR/srosa-3ef166fe-6483-4fba-aae0-c40117e00b29/main/erd.png)
 
 ```
 Roles are implemented as a TypeScript enum shared across the frontend 
