@@ -122,7 +122,7 @@ libs/
 ### Relationships
 
 ```
-![Alt text](./erd.png)
+![Alt text](erd.png)
 
 ```
 Roles are implemented as a TypeScript enum shared across the frontend 
