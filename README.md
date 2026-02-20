@@ -122,7 +122,7 @@ libs/
 ### Relationships
 
 ```
-<img src="erd.png" alt="Entity Relationship Diagram" width="800" />
+![ERD](https://github.com/SachiiR/srosa-3ef166fe-6483-4fba-aae0-c40117e00b29/blob/main/README.md)
 
 ```
 Roles are implemented as a TypeScript enum shared across the frontend 
