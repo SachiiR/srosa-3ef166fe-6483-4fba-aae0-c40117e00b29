@@ -238,7 +238,6 @@ Authorization: Bearer <token>
 Content-Type: application/json
 
 {
-  "id":1
   "title":"Get new furniture",
   "description":"Owner 1",
   "category":"Work",
